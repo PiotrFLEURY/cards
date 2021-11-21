@@ -1,0 +1,10 @@
+{
+  "appTitle": "cards",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "card_item_list_title": "Cards",
+  "@card_item_list_title": {
+    "description": "The title of the card list"
+  }
+}

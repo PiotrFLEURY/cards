@@ -72,6 +72,7 @@ class _CardItemCreationPageState extends State<CardItemCreationPage> {
                   labelText: 'Card ID',
                   border: OutlineInputBorder(),
                   hintText: 'Enter a unique ID for this card',
+                  suffixIcon: Icon(Icons.camera_alt_outlined),
                 ),
                 onChanged: (value) => setState(() => _id = value),
               ),
@@ -86,12 +87,25 @@ class _CardItemCreationPageState extends State<CardItemCreationPage> {
                 ),
                 onChanged: (value) => setState(() => _label = value),
               ),
-              BlockPicker(
-                pickerColor: _color.toColor(),
-                onColorChanged: (Color color) => setState(
-                  () => _color = color.toHexString(),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _showColorPicker(context),
+                child: Container(
+                  height: 48,
+                  width: double.infinity,
+                  color: _color.toColor(),
+                  child: Center(
+                    child: Text(
+                      '#$_color',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 16),
               CustomButton(
                 onPressed: () => _submit(context),
@@ -112,5 +126,20 @@ class _CardItemCreationPageState extends State<CardItemCreationPage> {
       color: _color,
     );
     Navigator.of(context).pop(newCard);
+  }
+
+  Future<void> _showColorPicker(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: BlockPicker(
+          pickerColor: _color.toColor(),
+          onColorChanged: (Color color) {
+            setState(() => _color = color.toHexString());
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+    );
   }
 }

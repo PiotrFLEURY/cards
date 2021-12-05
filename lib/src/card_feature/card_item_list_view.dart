@@ -1,4 +1,5 @@
 import 'package:cards/src/card_feature/card_item_creation_page.dart';
+import 'package:cards/src/card_feature/card_item_details_view.dart';
 import 'package:cards/src/card_feature/card_item_slot.dart';
 import 'package:cards/src/card_feature/card_service.dart';
 import 'package:cards/src/widgets/custom_button.dart';
@@ -41,8 +42,20 @@ class _CardItemListViewState extends State<CardItemListView> {
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                  'Currently ${widget.cardService.items.length} cards registered'),
-              background: const Icon(Icons.flutter_dash),
+                'Currently ${widget.cardService.items.length} cards registered',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    ?.copyWith(color: Colors.white),
+              ),
+              background: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.flutter_dash,
+                  size: 76.0,
+                  color: Colors.grey[100],
+                ),
+              ),
             ),
           ),
           CupertinoSliverRefreshControl(
@@ -75,12 +88,30 @@ class _CardItemListViewState extends State<CardItemListView> {
                     child: CardItemSlot(
                       card: widget.cardService.items[index],
                     ),
+                    startActionPane: ActionPane(
+                      motion: const DrawerMotion(),
+                      children: [
+                        SlidableAction(
+                          onPressed: (context) {
+                            Navigator.of(context).restorablePushNamed(
+                              CardItemDetailsView.routeName,
+                              arguments: widget.cardService.items[index].id,
+                            );
+                          },
+                          icon: Icons.zoom_in,
+                          label: 'Zoom',
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        )
+                      ],
+                    ),
                     endActionPane: ActionPane(
                       motion: const DrawerMotion(),
                       children: [
                         SlidableAction(
-                          onPressed: (_) {
-                            dynamic card = Navigator.of(context).pushNamed(
+                          onPressed: (_) async {
+                            dynamic card =
+                                await Navigator.of(context).pushNamed(
                               CardItemCreationPage.routeName,
                               arguments: widget.cardService.items[index],
                             );
